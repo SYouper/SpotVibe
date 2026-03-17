@@ -6,26 +6,29 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
-        <title>SpotVibe | Kırklareli</title>
-
+        <title>SpotVibe | Premium Guide</title>
         <link
             rel="stylesheet"
             href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         />
-
         <style>
+            @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap");
+
             :root {
-                --accent: #00ffa3;
-                --bg: #0d0d0d;
-                --glass: rgba(20, 20, 20, 0.9);
+                --accent: #d4af37; /* Gold / Sand Tonu */
+                --bg: #08090a;
+                --card-bg: #121418;
+                --glass: rgba(18, 20, 24, 0.8);
             }
+
             body {
                 margin: 0;
                 background: var(--bg);
-                color: white;
-                font-family: "Inter", sans-serif;
+                color: #fff;
+                font-family: "Plus Jakarta Sans", sans-serif;
                 overflow: hidden;
             }
+
             #map {
                 position: absolute;
                 top: 0;
@@ -34,32 +37,35 @@
                 z-index: 1;
             }
 
-            /* Üst Logo */
+            /* Minimalist Üst Başlık */
             .header-brand {
                 position: absolute;
-                top: 15px;
-                left: 15px;
+                top: 30px;
+                left: 20px;
                 z-index: 1000;
                 background: var(--glass);
-                backdrop-filter: blur(10px);
-                padding: 8px 18px;
-                border-radius: 50px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                font-weight: 900;
-                letter-spacing: -0.5px;
+                backdrop-filter: blur(25px);
+                padding: 12px 24px;
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                font-size: 11px;
+                letter-spacing: 3px;
+                font-weight: 800;
+                text-transform: uppercase;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             }
 
-            /* Alt Yatay Liste */
+            /* Alt Yatay Liste (Apple Style) */
             .bottom-scroll-list {
                 position: absolute;
-                bottom: 30px;
+                bottom: 40px;
                 left: 0;
                 right: 0;
                 z-index: 1000;
                 display: flex;
                 overflow-x: auto;
                 padding: 0 20px;
-                gap: 15px;
+                gap: 18px;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
             }
@@ -68,86 +74,136 @@
             }
 
             .spot-card-mini {
-                flex: 0 0 280px;
+                flex: 0 0 260px;
                 scroll-snap-align: center;
-                background: var(--glass);
-                backdrop-filter: blur(20px);
-                border-radius: 24px;
-                padding: 18px;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+                background: var(--card-bg);
+                border-radius: 28px;
+                padding: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.03);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                transition: transform 0.3s ease;
+            }
+            .spot-card-mini:active {
+                transform: scale(0.96);
             }
 
-            /* Bottom Sheet (Detaylar) */
+            /* Bottom Sheet (Elite) */
             .bottom-sheet {
                 position: fixed;
                 bottom: -100%;
                 left: 0;
                 right: 0;
                 z-index: 2000;
-                background: #111;
-                border-radius: 30px 30px 0 0;
-                height: 75vh;
-                transition: bottom 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-                padding: 25px;
-                box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.9);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                background: #0d0f12;
+                border-radius: 45px 45px 0 0;
+                height: 80vh;
+                transition: bottom 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+                padding: 30px;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
             }
             .bottom-sheet.open {
                 bottom: 0;
             }
-
             .sheet-handle {
-                width: 50px;
-                height: 6px;
-                background: rgba(255, 255, 255, 0.15);
+                width: 40px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.1);
                 border-radius: 10px;
-                margin: -10px auto 20px;
-            }
-            .sheet-img {
-                width: 100%;
-                height: 200px;
-                border-radius: 20px;
-                object-fit: cover;
-                margin-bottom: 20px;
-                background: #222;
+                margin: -10px auto 25px;
             }
 
+            /* Kaydırmalı Slider (Gelişmiş) */
+            .image-slider {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 12px;
+                margin-bottom: 25px;
+                border-radius: 24px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .image-slider::-webkit-scrollbar {
+                display: none;
+            }
+            .slider-img {
+                flex: 0 0 90%;
+                height: 260px;
+                object-fit: cover;
+                border-radius: 24px;
+                scroll-snap-align: center;
+                background: #1a1c20;
+            }
+
+            /* Etiketler */
             .analysis-tag {
                 display: inline-block;
-                background: rgba(0, 255, 163, 0.08);
+                background: rgba(212, 175, 55, 0.05);
                 color: var(--accent);
-                font-size: 11px;
-                padding: 6px 14px;
+                font-size: 10px;
+                padding: 8px 16px;
                 border-radius: 50px;
-                margin: 0 6px 8px 0;
-                border: 1px solid rgba(0, 255, 163, 0.15);
+                margin: 0 8px 10px 0;
+                border: 1px solid rgba(212, 175, 55, 0.15);
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .cta-button {
+                width: 100%;
+                background: var(--accent);
+                color: #000;
+                border: none;
+                padding: 20px;
+                border-radius: 20px;
+                font-weight: 800;
+                font-size: 13px;
+                letter-spacing: 1px;
+                margin-top: 30px;
+                text-transform: uppercase;
+                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
             }
 
             .close-btn {
                 position: absolute;
-                top: 20px;
-                right: 20px;
-                font-size: 28px;
+                top: 25px;
+                right: 30px;
+                font-size: 24px;
                 color: #444;
-                cursor: pointer;
+            }
+
+            /* Marker Customization */
+            .leaflet-marker-icon {
+                filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
             }
         </style>
     </head>
     <body>
         <div id="map"></div>
         <div class="header-brand">
-            <span style="color: var(--accent)">📍 SPOTVIBE</span>
+            KIRKLARELİ
+            <span style="color: var(--accent); margin-left: 5px"
+                >• SPOTVIBE</span
+            >
         </div>
+
         <div class="bottom-scroll-list" id="spot-list"></div>
 
         <div class="bottom-sheet" id="details-sheet">
             <div class="sheet-handle" onclick="closeDetails()"></div>
-            <div class="close-btn" onclick="closeDetails()">&times;</div>
+            <div class="close-btn" onclick="closeDetails()">✕</div>
 
             <div id="sheet-content">
-                <div id="sheet-img-container"></div>
-                <h2 id="sheet-title" style="margin: 0; font-size: 24px">
+                <div id="slider-container" class="image-slider"></div>
+                <h2
+                    id="sheet-title"
+                    style="
+                        margin: 0;
+                        font-size: 26px;
+                        font-weight: 800;
+                        letter-spacing: -1px;
+                    "
+                >
                     Mekan
                 </h2>
                 <p
@@ -155,59 +211,48 @@
                     style="
                         font-size: 12px;
                         color: var(--accent);
-                        margin-top: 5px;
-                        font-weight: bold;
+                        margin-top: 8px;
+                        font-weight: 600;
+                        letter-spacing: 1px;
                     "
                 ></p>
                 <p
                     id="sheet-desc"
                     style="
-                        font-size: 14px;
-                        line-height: 1.6;
-                        opacity: 0.7;
-                        margin-top: 15px;
+                        font-size: 15px;
+                        line-height: 1.7;
+                        opacity: 0.6;
+                        margin-top: 20px;
+                        font-weight: 300;
                     "
                 ></p>
 
-                <div style="margin-top: 20px">
+                <div style="margin-top: 30px">
                     <p
                         style="
-                            font-size: 11px;
+                            font-size: 9px;
                             font-weight: 800;
-                            letter-spacing: 1px;
-                            color: #555;
-                            margin-bottom: 12px;
+                            letter-spacing: 2px;
+                            color: #444;
+                            margin-bottom: 15px;
+                            text-transform: uppercase;
                         "
                     >
-                        AI YORUM ANALİZİ
+                        Mekan Analizi
                     </p>
                     <div id="sheet-tags"></div>
                 </div>
 
-                <button
-                    onclick="openInMaps()"
-                    style="
-                        width: 100%;
-                        background: var(--accent);
-                        color: black;
-                        border: none;
-                        padding: 18px;
-                        border-radius: 18px;
-                        font-weight: 900;
-                        margin-top: 25px;
-                        font-size: 14px;
-                        cursor: pointer;
-                    "
-                >
-                    🗺️ YOL TARİFİ AL
+                <button class="cta-button" onclick="openInMaps()">
+                    📍 Yol Tarifi Al
                 </button>
             </div>
         </div>
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="data.js"></script>
-
         <script>
+            // Haritayı Ultra Dark & Minimalist yapıyoruz
             const map = L.map("map", {
                 zoomControl: false,
                 attributionControl: false,
@@ -223,9 +268,8 @@
                 list.innerHTML = "";
                 if (typeof mySpots !== "undefined") {
                     mySpots.forEach((spot) => {
-                        const [name, lat, lng, type, desc, price, img, tags] =
+                        const [name, lat, lng, type, desc, price, imgs, tags] =
                             spot;
-
                         const marker = L.marker([lat, lng]).addTo(map);
                         marker.on("click", () => {
                             map.flyTo([lat, lng], 17);
@@ -235,9 +279,9 @@
                         const card = document.createElement("div");
                         card.className = "spot-card-mini";
                         card.innerHTML = `
-                        <div style="font-size:10px; color:var(--accent); font-weight:bold; letter-spacing:1px;">${type.toUpperCase()}</div>
-                        <div style="font-weight:bold; margin-top:8px; font-size:16px;">${name}</div>
-                        <div style="font-size:11px; opacity:0.5; margin-top:5px;">${price} • Detaylar için dokun</div>
+                        <div style="font-size:9px; color:var(--accent); font-weight:800; letter-spacing:1px;">${type.toUpperCase()}</div>
+                        <div style="font-weight:700; margin-top:10px; font-size:18px; letter-spacing:-0.5px;">${name}</div>
+                        <div style="font-size:12px; opacity:0.4; margin-top:6px; font-weight:400;">${price} • Keşfet</div>
                     `;
                         card.onclick = () => {
                             map.flyTo([lat, lng], 17);
@@ -249,19 +293,23 @@
             }
 
             function openDetails(spot) {
-                const [name, lat, lng, type, desc, price, img, tags] = spot;
+                const [name, lat, lng, type, desc, price, imgs, tags] = spot;
                 activeCoords = [lat, lng];
                 document.getElementById("sheet-title").innerText = name;
                 document.getElementById("sheet-type").innerText =
                     type + " • " + price;
                 document.getElementById("sheet-desc").innerText = desc;
 
-                // Fotoğraf İşlemi: Fotoğraf yoksa AI Yer Tutucu oluşturur
-                const imgContainer = document.getElementById(
-                    "sheet-img-container",
-                );
-                const placeholderUrl = `https://ui-avatars.com/api/?name=${name.replace(/ /g, "+")}&background=0d0d0d&color=00ffa3&size=400&font-size=0.2&bold=true`;
-                imgContainer.innerHTML = `<img src="${img || placeholderUrl}" class="sheet-img">`;
+                const slider = document.getElementById("slider-container");
+                slider.innerHTML = "";
+
+                if (Array.isArray(imgs) && imgs.length > 0) {
+                    imgs.forEach((img) => {
+                        slider.innerHTML += `<img src="./${img}" class="slider-img" onerror="this.src='https://ui-avatars.com/api/?name=${name.replace(/ /g, "+")}&background=121418&color=d4af37&size=400'">`;
+                    });
+                } else {
+                    slider.innerHTML = `<img src="https://ui-avatars.com/api/?name=${name.replace(/ /g, "+")}&background=121418&color=d4af37&size=400" class="slider-img">`;
+                }
 
                 const tagsDiv = document.getElementById("sheet-tags");
                 tagsDiv.innerHTML = "";
@@ -270,7 +318,6 @@
                         (t) =>
                             (tagsDiv.innerHTML += `<span class="analysis-tag">${t}</span>`),
                     );
-
                 document.getElementById("details-sheet").classList.add("open");
             }
 
@@ -279,7 +326,6 @@
                     .getElementById("details-sheet")
                     .classList.remove("open");
             }
-
             function openInMaps() {
                 window.open(
                     `https://www.google.com/maps/dir/?api=1&destination=${activeCoords[0]},${activeCoords[1]}`,
@@ -287,15 +333,14 @@
                 );
             }
 
-            // GPS Takibi
             map.locate({ watch: true, enableHighAccuracy: true });
             map.on("locationfound", (e) => {
                 if (window.userMarker) map.removeLayer(window.userMarker);
                 window.userMarker = L.circleMarker(e.latlng, {
-                    radius: 8,
-                    fillColor: "#007bff",
-                    color: "#fff",
-                    weight: 3,
+                    radius: 6,
+                    fillColor: "#fff",
+                    color: "#d4af37",
+                    weight: 4,
                     fillOpacity: 1,
                 }).addTo(map);
             });
