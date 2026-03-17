@@ -7,7 +7,7 @@ const mySpots = [
     "Çalışma",
     "İstasyon Caddesi'nde, geniş masaları ve hızlı internetiyle öğrencilerin favorisi.",
     "₺₺",
-    "images/Coffeemania.webp", // Fotoğraf yoksa otomatik AI yer tutucu çalışır
+    "images/coffeemania.webp", // Fotoğraf yoksa otomatik AI yer tutucu çalışır
     [
       "☕ En İyi Kahve",
       "🔌 Her Masada Priz",
